@@ -74,3 +74,49 @@ console.log(toCamelCase("myHTTPServer"));              // "myHttpServer"
 console.log(toCamelCase("FOO_BAR", { preserveAcronyms: true })); // "FOOBar"
 console.log(toCamelCase("  ---___   "));               // ""
 console.log(toCamelCase("straße mit ß und ä"));        // "straßeMitßUndÄ"
+
+
+/**
+ * Converts a string to dot.case format.
+ * Handles spaces, underscores, hyphens, and camelCase.
+ * All letters are lowercased and words are separated by a single dot.
+ *
+ * Examples:
+ *   toDotCase("First Name")        // "first.name"
+ *   toDotCase("user_id")           // "user.id"
+ *   toDotCase("mobile-number")     // "mobile.number"
+ *   toDotCase("myHTTPServer")      // "my.http.server"
+ *   toDotCase("SCREEN_NAME")       // "screen.name"
+ */
+function toDotCase(input) {
+  if (typeof input !== 'string') {
+    throw new TypeError('Input must be a string.');
+  }
+
+  // Trim whitespace
+  let str = input.trim();
+
+  // Return empty string if only separators or empty
+  if (!str || /^[\s_\-\.]+$/.test(str)) return '';
+
+  // Split camelCase and acronyms
+  str = str
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+
+  // Replace separators with spaces
+  str = str.replace(/[\s_\-\.]+/g, ' ');
+
+  // Split into words, filter out empty entries
+  const words = str.split(' ').filter(Boolean);
+
+  // Lowercase and join with dots
+  return words.map(w => w.toLowerCase()).join('.');
+}
+
+// Example usage:
+console.log(toDotCase("First Name"));        // "first.name"
+console.log(toDotCase("user_id"));           // "user.id"
+console.log(toDotCase("mobile-number"));     // "mobile.number"
+console.log(toDotCase("myHTTPServer"));      // "my.http.server"
+console.log(toDotCase("SCREEN_NAME"));       // "screen.name"
